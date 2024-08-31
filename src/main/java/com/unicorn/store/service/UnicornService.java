@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UnicornService {
@@ -21,7 +22,7 @@ public class UnicornService {
     }
 
     public Unicorn createUnicorn(Unicorn unicorn) {
-        var savedUnicorn = unicornRepository.save(unicorn);
+        Unicorn savedUnicorn = unicornRepository.save(unicorn);
         unicornPublisher.publish(savedUnicorn, UnicornEventType.UNICORN_CREATED);
         return savedUnicorn;
     }
@@ -40,13 +41,13 @@ public class UnicornService {
 
     public Unicorn updateUnicorn(Unicorn unicorn, String unicornId) {
         unicorn.setId(unicornId);
-        var savedUnicorn = unicornRepository.save(unicorn);
+        Unicorn savedUnicorn = unicornRepository.save(unicorn);
         unicornPublisher.publish(savedUnicorn, UnicornEventType.UNICORN_UPDATED);
         return savedUnicorn;
     }
 
     public Unicorn getUnicorn(String unicornId) {
-        var unicorn = unicornRepository.findById(unicornId);
+        Optional<Unicorn> unicorn = unicornRepository.findById(unicornId);
         return unicorn.orElseThrow(ResourceNotFoundException::new);
     }
 

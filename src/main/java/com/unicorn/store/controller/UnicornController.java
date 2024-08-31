@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -25,10 +26,10 @@ public class UnicornController {
         this.unicornService = unicornService;
     }
 
-    @PostMapping("/unicorns")
+    @RequestMapping(value="/unicorns", method = RequestMethod.POST)
     public ResponseEntity<Unicorn> createUnicorn(@RequestBody Unicorn unicorn) {
         try {
-            var savedUnicorn = unicornService.createUnicorn(unicorn);
+            Unicorn savedUnicorn = unicornService.createUnicorn(unicorn);
             return ResponseEntity.ok(savedUnicorn);
         } catch (Exception e) {
             String errorMsg = "Error creating unicorn";
@@ -38,11 +39,11 @@ public class UnicornController {
         }
     }
 
-    @GetMapping("/unicorns")
+    @RequestMapping(value = "/unicorns", method = RequestMethod.GET)
     public ResponseEntity<List<Unicorn>> getAllUnicorns() {
 
         try {
-            var savedUnicorns = unicornService.getAllUnicorns();
+            List<Unicorn> savedUnicorns = unicornService.getAllUnicorns();
             return ResponseEntity.ok(savedUnicorns);
         } catch (Exception e) {
             String errorMsg = "Error reading unicorns";
@@ -52,11 +53,11 @@ public class UnicornController {
         }
     }
 
-    @PutMapping("/unicorns/{unicornId}")
+    @RequestMapping(value = "/unicorns/{unicornId}", method = RequestMethod.PUT)
     public ResponseEntity<Unicorn> updateUnicorn(@RequestBody Unicorn unicorn,
             @PathVariable String unicornId) {
         try {
-            var savedUnicorn = unicornService.updateUnicorn(unicorn, unicornId);
+            Unicorn savedUnicorn = unicornService.updateUnicorn(unicorn, unicornId);
             return ResponseEntity.ok(savedUnicorn);
         } catch (Exception e) {
             String errorMsg = "Error updating unicorn";
@@ -66,10 +67,10 @@ public class UnicornController {
         }
     }
 
-    @GetMapping("/unicorns/{unicornId}")
+    @RequestMapping(value = "/unicorns/{unicornId}", method = RequestMethod.GET)
     public ResponseEntity<Unicorn> getUnicorn(@PathVariable String unicornId) {
         try {
-            var unicorn = unicornService.getUnicorn(unicornId);
+            Unicorn unicorn = unicornService.getUnicorn(unicornId);
             return ResponseEntity.ok(unicorn);
         } catch (ResourceNotFoundException e) {
             String errorMsg = "Unicorn not found";
@@ -79,7 +80,7 @@ public class UnicornController {
         }
     }
 
-    @DeleteMapping("/unicorns/{unicornId}")
+    @RequestMapping(value = "/unicorns/{unicornId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteUnicorn(@PathVariable String unicornId) {
         try {
             unicornService.deleteUnicorn(unicornId);
@@ -91,7 +92,7 @@ public class UnicornController {
         } finally {
         }
     }
-    @GetMapping("/")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<String> getWelcomeMessage() {
         return new ResponseEntity<>("Welcome to the Unicorn Store!", HttpStatus.OK);
     }

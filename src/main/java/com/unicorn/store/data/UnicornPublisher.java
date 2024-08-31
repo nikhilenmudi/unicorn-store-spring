@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unicorn.store.model.Unicorn;
 import com.unicorn.store.model.UnicornEventType;
 
-import jakarta.annotation.PostConstruct;
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +36,11 @@ public class UnicornPublisher {
 
     public void publish(Unicorn unicorn, UnicornEventType unicornEventType) {
         try {
-            var unicornJson = objectMapper.writeValueAsString(unicorn);
+            String unicornJson = objectMapper.writeValueAsString(unicorn);
             logger.info("Publishing ... " + unicornEventType.toString());
             logger.info(unicornJson);
 
-            var eventsRequest = createEventRequestEntry(unicornEventType, unicornJson);
+            PutEventsRequest eventsRequest = createEventRequestEntry(unicornEventType, unicornJson);
             eventBridgeClient.putEvents(eventsRequest).get();
         } catch (Exception e) {
             logger.error("Error ...");
@@ -49,7 +49,7 @@ public class UnicornPublisher {
     }
 
     private PutEventsRequest createEventRequestEntry(UnicornEventType unicornEventType, String unicornJson) {
-        var entry = PutEventsRequestEntry.builder()
+        PutEventsRequestEntry entry = PutEventsRequestEntry.builder()
                 .source("com.unicorn.store")
                 .eventBusName("unicorns")
                 .detailType(unicornEventType.name())
